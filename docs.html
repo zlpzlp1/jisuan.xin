@@ -1,0 +1,598 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>极算金融数据平台 · API 接口目录</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg0:#070a0d; --bg1:#0c1118; --card:#0f1720; --border:#1a2a3a;
+  --text:#dde4ed; --muted:#7a8ba0;
+  --accent:#2ecc71; --accent2:#1abc9c;
+  --radius:12px;
+  --font:"Plus Jakarta Sans",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg0);color:var(--text);line-height:1.65;min-height:100vh;overflow-x:hidden}
+.bg-grid{
+  position:fixed;inset:0;pointer-events:none;opacity:.18;z-index:0;
+  background-image:
+    linear-gradient(rgba(46,204,113,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(46,204,113,.04) 1px,transparent 1px);
+  background-size:56px 56px;
+}
+.layout{position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:24px 16px 80px}
+.main{min-width:0}
+
+/* top bar */
+.top-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 20px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.top-brand{font-weight:700;font-size:1.05rem;letter-spacing:-.02em;background:linear-gradient(120deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.top-links{display:flex;flex-wrap:wrap;gap:14px 20px;align-items:center}
+.top-links a{font-size:.82rem;font-weight:600;text-decoration:none}
+.top-links a:hover{text-decoration:underline}
+.top-links .a-docs{color:var(--accent2)}
+.top-links .a-home{color:var(--accent)}
+
+/* lead */
+.lead-box{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px 20px;margin-bottom:20px}
+.lead-box p{margin:0 0 8px;color:#b0bcc8;font-size:.88rem;line-height:1.55}
+.lead-box p:last-child{margin-bottom:0}
+.lead-box code{font-family:var(--mono);font-size:.8rem;color:var(--accent)}
+
+/* grid */
+.doc-grid{display:grid;grid-template-columns:260px 1fr;gap:20px}
+.doc-nav{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 0;position:sticky;top:16px;align-self:start;max-height:calc(100vh-40px);overflow-y:auto}
+.doc-nav-cat{font-size:.72rem;font-weight:700;color:var(--accent);text-transform:uppercase;padding:10px 16px 3px;letter-spacing:.4px}
+.doc-nav a{display:block;padding:4px 16px 4px 20px;font-size:.8rem;color:var(--muted);text-decoration:none;transition:color .15s}
+.doc-nav a:hover{color:var(--accent)}
+.doc-content{min-width:0}
+
+/* section */
+.doc-sec{margin-bottom:32px;scroll-margin-top:16px}
+.doc-sec:last-child{margin-bottom:0}
+.doc-sec-head{margin-bottom:14px}
+.doc-sec-head h2{font-size:1.08rem;margin:0 0 4px;letter-spacing:-.02em}
+.doc-sec-sub{margin:0;color:var(--muted);font-size:.84rem}
+
+/* api endpoint card */
+.ep-card{border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px;background:rgba(12,17,24,.6);scroll-margin-top:60px}
+.ep-card:last-child{margin-bottom:0}
+.ep-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.ep-name{font-family:var(--mono);font-size:.86rem;color:var(--accent);font-weight:600;word-break:break-all}
+.ep-docs{font-size:.78rem;font-weight:600;color:var(--accent2);text-decoration:none;white-space:nowrap}
+.ep-docs:hover{text-decoration:underline;color:#a8d8ea}
+.ep-desc{margin:0 0 8px;font-size:.87rem;color:#c0cad8;word-break:break-word}
+.ep-meta{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;font-size:.8rem;margin-bottom:4px}
+.ep-tag{flex-shrink:0;font-size:.66rem;text-transform:uppercase;letter-spacing:.06em;color:var(--accent2);font-weight:600}
+.ep-params{color:var(--muted);font-family:var(--mono);font-size:.76rem}
+
+@media(max-width:820px){
+  .doc-grid{grid-template-columns:1fr}
+  .doc-nav{position:static;max-height:none}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="layout">
+<div class="main">
+
+<!-- top -->
+<div class="top-bar">
+  <span class="top-brand">极算金融数据平台</span>
+  <div class="top-links">
+    <a class="a-home" href="jisuan_index.html">官网首页</a>
+    <a class="a-docs" href="#">API接口目录</a>
+  </div>
+</div>
+
+<!-- lead -->
+<div class="lead-box">
+  <p>本目录列出极算金融数据平台全部 <strong>开放接口别名</strong>。使用时以 <code>token</code> + <code>api</code> 参数向网关 <code>POST http://124.220.44.71/api/gateway</code> 发起请求。返回数据统一封装在 <code>data</code> 字段。</p>
+  <p>在线试调与接口详情请在 <a href="#" style="color:var(--accent2);font-weight:600">开发者文档</a> 中操作。</p>
+</div>
+
+<div class="doc-grid">
+<!-- ── 左侧导航 ── -->
+<nav class="doc-nav">
+  <div class="doc-nav-cat">列表与检索</div>
+  <a href="#sec-list">A股全列表·沪深基础·新股·指数·京/港/科创板</a>
+
+  <div class="doc-nav-cat">板块概念</div>
+  <a href="#sec-sector">概念代码·板块成分·个股所属·资金流向</a>
+
+  <div class="doc-nav-cat">股池与盘面</div>
+  <a href="#sec-pool">涨停·跌停·强势·次新·炸板</a>
+
+  <div class="doc-nav-cat">公司资料</div>
+  <a href="#sec-company">简介·高管·分红·增发·解禁·股东·市值</a>
+
+  <div class="doc-nav-cat">实时行情</div>
+  <a href="#sec-realtime">多股实时·逐笔·五档</a>
+
+  <div class="doc-nav-cat">资金流向</div>
+  <a href="#sec-flow">个股实时/历史·板块资金</a>
+
+  <div class="doc-nav-cat">K 线与扩展</div>
+  <a href="#sec-kline">历史K线·分时·涨跌停价·指标</a>
+
+  <div class="doc-nav-cat">财务报表</div>
+  <a href="#sec-fin">三表·指标·股本·股东·股东数</a>
+
+  <div class="doc-nav-cat">技术指标</div>
+  <a href="#sec-indicator">MACD·MA·BOLL·KDJ</a>
+
+  <div class="doc-nav-cat">指数</div>
+  <a href="#sec-index">指数实时·K线·MACD·MA·BOLL·KDJ</a>
+
+  <div class="doc-nav-cat">多市场</div>
+  <a href="#sec-multi">京市·港股·科创板·基金实时</a>
+
+  <div class="doc-nav-cat">集合竞价</div>
+  <a href="#sec-auction">热点板块·抢筹排序·竞价一字板</a>
+
+  <div class="doc-nav-cat">异动数据</div>
+  <a href="#sec-abnormal">全量异动·历史股票异动</a>
+
+  <div class="doc-nav-cat">风险预警</div>
+  <a href="#sec-risk">大股东减持·解禁预警·严重异动</a>
+
+  <div class="doc-nav-cat">人气&情绪</div>
+  <a href="#sec-sentiment">人气排行·情绪周期数据</a>
+
+  <div class="doc-nav-cat">龙虎榜</div>
+  <a href="#sec-lhb">龙虎榜查询·游资交割·机构统计</a>
+</nav>
+
+<!-- ── 右侧内容 ── -->
+<div class="doc-content">
+
+<!-- ====== 1. 列表与检索 ====== -->
+<section class="doc-sec" id="sec-list">
+<div class="doc-sec-head">
+  <h2>列表与检索</h2>
+  <p class="doc-sec-sub">证券代码表、新股日历、指数与多市场基础列表</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">stock_list</span></div>
+  <p class="ep-desc">沪深京多市场股票合并列表。单条记录为一只证券的基础代码与名称，供后续查询作为入参。</p>
+  <div class="ep-meta"><span class="ep-tag">UPDATE</span><span class="ep-params">交易日盘后多时段刷新</span></div>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">hs_list_main</span></div>
+  <p class="ep-desc">沪深 A 股基础列表（不含北证合并）。代码、名称、交易所。</p>
+  <div class="ep-meta"><span class="ep-tag">UPDATE</span><span class="ep-params">交易日 ~16:20 后更新</span></div>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">ipo_calendar</span></div>
+  <p class="ep-desc">新股申购与发行信息日历，按申购日期倒序。</p>
+  <div class="ep-meta"><span class="ep-tag">UPDATE</span><span class="ep-params">每日 ~17:00 后刷新</span></div>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">index_list_main</span></div>
+  <p class="ep-desc">沪深市场主要指数代码与名称列表。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">bj_list_stocks</span></div>
+  <p class="ep-desc">京市股票基础列表。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">bj_list_indices</span></div>
+  <p class="ep-desc">京市指数列表。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">hk_list_stocks</span></div>
+  <p class="ep-desc">港股基础列表。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">kc_list_stocks</span></div>
+  <p class="ep-desc">科创板股票列表。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">shfunds_list / szfunds_list / etf_list</span></div>
+  <p class="ep-desc">沪深基金列表、ETF 基金列表。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">st_stocks_list</span></div>
+  <p class="ep-desc">ST 股票列表。</p>
+</div>
+</section>
+
+<!-- ====== 2. 板块概念 ====== -->
+<section class="doc-sec" id="sec-sector">
+<div class="doc-sec-head">
+  <h2>板块概念</h2>
+  <p class="doc-sec-sub">概念代码、板块代码、指数/行业/概念树、成分股、所属板块、资金流向</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">concept_code / sector_code</span></div>
+  <p class="ep-desc">概念板块代码表和行业板块代码表，名称 + 代码 + 所属分类。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">sector_index_tree</span></div>
+  <p class="ep-desc">指数/行业/概念树结构，层级关系。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">sector_members / concept_members</span></div>
+  <p class="ep-desc">按板块/概念代码查询成分股列表。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">stock_sectors</span></div>
+  <p class="ep-desc">单只股票所属指数、行业、概念板块。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">stock_concept_flow / sector_flow</span></div>
+  <p class="ep-desc">板块、概念历史资金流向。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">sector_concept_members</span></div>
+  <p class="ep-desc">板块、概念成分股列表。</p>
+</div>
+</section>
+
+<!-- ====== 3. 股池与盘面 ====== -->
+<section class="doc-sec" id="sec-pool">
+<div class="doc-sec-head">
+  <h2>股池与盘面</h2>
+  <p class="doc-sec-sub">涨停/跌停/强势/次新/炸板，按交易日查询</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">pool_limit_up</span></div>
+  <p class="ep-desc">涨停股池。含代码、名称、涨停价、封板时间、连板数、封板资金、炸板次数、行业等字段。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">pool_limit_down</span></div>
+  <p class="ep-desc">跌停股池。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">pool_strong</span></div>
+  <p class="ep-desc">强势股池（涨幅居前或活跃标的）。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">pool_new_stock</span></div>
+  <p class="ep-desc">次新股池。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">pool_crack</span></div>
+  <p class="ep-desc">炸板股池（触板后回落）。</p>
+</div>
+</section>
+
+<!-- ====== 4. 公司资料 ====== -->
+<section class="doc-sec" id="sec-company">
+<div class="doc-sec-head">
+  <h2>公司资料</h2>
+  <p class="doc-sec-sub">公司简介、高管、分红、增发、解禁、股东、市值等</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">company_profile</span></div>
+  <p class="ep-desc">公司简介信息。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">company_indices</span></div>
+  <p class="ep-desc">所属指数列表。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">company_executives / company_supervisory / company_directors</span></div>
+  <p class="ep-desc">历届高管、监事会、董事会成员。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">company_dividend_history / company_rights_offering</span></div>
+  <p class="ep-desc">近年分红记录、增发记录。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">restricted_shares</span></div>
+  <p class="ep-desc">解禁限售信息。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">quarterly_profit / quarterly_cashflow / quarterly_forecast</span></div>
+  <p class="ep-desc">近一年季度利润、现金流、业绩预告。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">financial_indicators</span></div>
+  <p class="ep-desc">财务指标（EPS/ROE等）。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">top10_shareholders / top10_tradable / holder_changes</span></div>
+  <p class="ep-desc">十大股东、十大流通股东、股东户数变化。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">fund_holdings</span></div>
+  <p class="ep-desc">基金持股数据。</p>
+</div>
+</section>
+
+<!-- ====== 5. 实时行情 ====== -->
+<section class="doc-sec" id="sec-realtime">
+<div class="doc-sec-head">
+  <h2>实时行情</h2>
+  <p class="doc-sec-sub">多股实时、逐笔成交、买卖五档</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">stock_realtime</span></div>
+  <p class="ep-desc">单只/多股实时行情：现价、涨跌幅、成交额、换手率、PE/PB/市值等。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">stock_tick</span></div>
+  <p class="ep-desc">当日逐笔成交数据（非交易时间返回空）。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">stock_realtime_batch</span></div>
+  <p class="ep-desc">多股批量实时行情。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">stock_order_book</span></div>
+  <p class="ep-desc">买卖五档盘口。</p>
+</div>
+</section>
+
+<!-- ====== 6. 资金流向 ====== -->
+<section class="doc-sec" id="sec-flow">
+<div class="doc-sec-head">
+  <h2>资金流向</h2>
+  <p class="doc-sec-sub">个股资金流向实时与历史、板块资金统计</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">stock_fund_flow_realtime</span></div>
+  <p class="ep-desc">个股资金流向实时（按时间序）: 主力/散户净流入。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">stock_fund_flow_history</span></div>
+  <p class="ep-desc">个股资金流向历史。</p>
+</div>
+</section>
+
+<!-- ====== 7. K 线与扩展 ====== -->
+<section class="doc-sec" id="sec-kline">
+<div class="doc-sec-head">
+  <h2>K 线与扩展行情</h2>
+  <p class="doc-sec-sub">最新K线/分时、历史K线/分时、涨跌停价、行情指标、基础信息</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">kline_latest</span></div>
+  <p class="ep-desc">最新 K 线/分时数据。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">kline_history</span></div>
+  <p class="ep-desc">历史 K 线/分时数据（支持复权）。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">limit_price_history</span></div>
+  <p class="ep-desc">历史涨跌停价。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">stock_market_index</span></div>
+  <p class="ep-desc">行情指标数据。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">stock_basic_info</span></div>
+  <p class="ep-desc">股票基础信息。</p>
+</div>
+</section>
+
+<!-- ====== 8. 财务报表 ====== -->
+<section class="doc-sec" id="sec-fin">
+<div class="doc-sec-head">
+  <h2>财务报表</h2>
+  <p class="doc-sec-sub">三表 + 财务指标 + 股本 + 股东 + 股东数</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">fin_balance</span></div>
+  <p class="ep-desc">资产负债表。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">fin_income</span></div>
+  <p class="ep-desc">利润表。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">fin_cashflow</span></div>
+  <p class="ep-desc">现金流量表。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">fin_key_indicators</span></div>
+  <p class="ep-desc">财务主要指标。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">company_share_structure</span></div>
+  <p class="ep-desc">公司股本表。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">top10_holders / top10_tradable_holders</span></div>
+  <p class="ep-desc">十大股东 / 十大流通股东。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">holder_count_change</span></div>
+  <p class="ep-desc">公司股东数变动。</p>
+</div>
+</section>
+
+<!-- ====== 9. 技术指标 ====== -->
+<section class="doc-sec" id="sec-indicator">
+<div class="doc-sec-head">
+  <h2>技术指标</h2>
+  <p class="doc-sec-sub">MACD、MA、BOLL、KDJ 等常用技术指标计算</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">macd</span></div>
+  <p class="ep-desc">MACD 指标计算。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">ma</span></div>
+  <p class="ep-desc">移动平均线（MA）。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">boll</span></div>
+  <p class="ep-desc">布林带（BOLL）。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">kdj</span></div>
+  <p class="ep-desc">KDJ 指标。</p>
+</div>
+</section>
+
+<!-- ====== 10. 指数 ====== -->
+<section class="doc-sec" id="sec-index">
+<div class="doc-sec-head">
+  <h2>指数</h2>
+  <p class="doc-sec-sub">指数实时、指数K线、指数MACD/MA/BOLL/KDJ</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">index_realtime</span></div>
+  <p class="ep-desc">指数实时行情。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">index_kline_latest / index_kline_history</span></div>
+  <p class="ep-desc">指数最新K线 / 历史K线。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">index_macd / index_ma / index_boll / index_kdj</span></div>
+  <p class="ep-desc">指数的 MACD、MA、BOLL、KDJ 指标。</p>
+</div>
+</section>
+
+<!-- ====== 11. 多市场 ====== -->
+<section class="doc-sec" id="sec-multi">
+<div class="doc-sec-head">
+  <h2>京/港/科创/基金</h2>
+  <p class="doc-sec-sub">京市、港股、科创板、基金实时行情与五档盘口</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">bj_realtime / bj_order_book</span></div>
+  <p class="ep-desc">京市股票实时行情 / 五档盘口。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">hk_realtime / hk_order_book</span></div>
+  <p class="ep-desc">港股实时行情 / 五档盘口。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">kcb_realtime / kcb_order_book</span></div>
+  <p class="ep-desc">科创板实时行情 / 五档。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">fund_realtime</span></div>
+  <p class="ep-desc">基金实时行情。</p>
+</div>
+</section>
+
+<!-- ====== 12. 集合竞价 ====== -->
+<section class="doc-sec" id="sec-auction">
+<div class="doc-sec-head">
+  <h2>集合竞价</h2>
+  <p class="doc-sec-sub">早盘热点板块·竞品强度·抢筹排序·竞价一字板</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">auction_hot_sectors</span></div>
+  <p class="ep-desc">早盘热点板块强度排名。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">auction_hot_sectors_enhanced</span></div>
+  <p class="ep-desc">竞价增强版热点板块（更多维度）。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">auction_hot_sector_stocks</span></div>
+  <p class="ep-desc">热点板块竞价所属个股列表。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">auction_snatch_amount / auction_snatch_volume / auction_snatch_open / auction_snatch_gain</span></div>
+  <p class="ep-desc">早盘抢筹排序（委托金额/成交金额/开盘金额/涨幅）。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">auction_tail_snatch_amount / auction_tail_snatch_volume / auction_tail_snatch_close / auction_tail_snatch_gain</span></div>
+  <p class="ep-desc">尾盘抢筹排序（委托金额/成交金额/收盘金额/涨幅）。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">auction_zt_one_word</span></div>
+  <p class="ep-desc">竞价一字板甄别。</p>
+</div>
+</section>
+
+<!-- ====== 13. 异动数据 ====== -->
+<section class="doc-sec" id="sec-abnormal">
+<div class="doc-sec-head">
+  <h2>异动数据</h2>
+  <p class="doc-sec-sub">全量异动与历史股票异动</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">abnormal_full</span></div>
+  <p class="ep-desc">全量异动数据。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">abnormal_stock_history</span></div>
+  <p class="ep-desc">历史股票异动数据。</p>
+</div>
+</section>
+
+<!-- ====== 14. 风险预警 ====== -->
+<section class="doc-sec" id="sec-risk">
+<div class="doc-sec-head">
+  <h2>风险预警</h2>
+  <p class="doc-sec-sub">大股东减持、大比例解禁、严重异动提醒</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">risk_shareholder_reduction</span></div>
+  <p class="ep-desc">大股东减持预警。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">risk_lockup_expiry</span></div>
+  <p class="ep-desc">大比例解禁预警。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">risk_severe_abnormal</span></div>
+  <p class="ep-desc">严重异常波动提醒。</p>
+</div>
+</section>
+
+<!-- ====== 15. 人气与情绪 ====== -->
+<section class="doc-sec" id="sec-sentiment">
+<div class="doc-sec-head">
+  <h2>人气榜与情绪周期</h2>
+  <p class="doc-sec-sub">股票人气排行、市场情绪周期数据</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">sentiment_popularity</span></div>
+  <p class="ep-desc">股票人气排行榜。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">sentiment_cycle</span></div>
+  <p class="ep-desc">情绪周期数据（涨跌停分布、连板高度等）。</p>
+</div>
+</section>
+
+<!-- ====== 16. 龙虎榜 ====== -->
+<section class="doc-sec" id="sec-lhb">
+<div class="doc-sec-head">
+  <h2>龙虎榜</h2>
+  <p class="doc-sec-sub">龙虎榜查询、游资交割单、机构买卖统计</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">lhb_query</span></div>
+  <p class="ep-desc">龙虎榜查询（按股票/日期）。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">lhb_individual_trader_history</span></div>
+  <p class="ep-desc">单个游资上榜交割单历史。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">lhb_trader_list</span></div>
+  <p class="ep-desc">全量游资上榜交割单历史。</p>
+</div>
+<div class="ep-card">
+  <div class="ep-head"><span class="ep-name">lhb_trader_names</span></div>
+  <p class="ep-desc">获取游资名称列表。</p>
+</div>
+</section>
+
+</div><!-- /doc-content -->
+</div><!-- /doc-grid -->
+
+</div><!-- /main -->
+</div><!-- /layout -->
+
+</body>
+</html>
