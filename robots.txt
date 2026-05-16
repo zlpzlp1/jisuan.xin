@@ -1,3 +1,3 @@
 ﻿User-agent: *
 Allow: /
-Sitemap: https://zlpzlp1.github.io/jisuan.xin/sitemap.xml
+Sitemap: https://jisuan.xin/sitemap.xml
