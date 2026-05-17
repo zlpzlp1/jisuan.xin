@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>极算金融量化平台 · 开发者文档</title>
+<meta name="description" content="极算金融量化平台开发者文档 — 16大分类、100+金融数据API接口" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+:root{--bg0:#080d12;--bg1:#0c1118;--card:#111a24;--border:#1e2a36;--text:#e4edf4;--muted:#8b9aad;--accent:#2ecc71;--accent-hover:#27ae60;--accent2:#a78bfa;--radius:12px;--font:"Plus Jakarta Sans",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace;--nw:280px}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:16px}
+body{font-family:var(--font);background:var(--bg0);color:var(--text);line-height:1.65;display:flex;min-height:100vh}
+.nav{position:fixed;top:0;left:0;width:var(--nw);height:100vh;overflow-y:auto;background:var(--bg1);border-right:1px solid var(--border);z-index:100;padding:20px 0}
+.nav-inner{padding:0 14px}
+.nav-logo{font-weight:700;font-size:1rem;margin-bottom:16px;padding:0 8px;background:linear-gradient(120deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.nav-item{cursor:pointer;padding:6px 8px;border-radius:6px;font-size:0.82rem;transition:background .15s}
+.nav-item:hover{background:var(--card);color:#fff}
+.nav-cat{font-weight:600;font-size:0.82rem;color:var(--muted);padding:14px 8px 4px;text-transform:uppercase;letter-spacing:.04em;cursor:pointer}
+.nav-sub{padding-left:12px;overflow:hidden;max-height:0;transition:max-height .35s}
+.nav-sub.open{max-height:5000px}
+.nav-toggle{display:none}
+.main{margin-left:var(--nw);flex:1;max-width:calc(100vw - var(--nw));padding:32px 32px 80px}
+.main-inner{max-width:920px}
+.page-title{font-size:1.5rem;font-weight:700;margin-bottom:4px;letter-spacing:-.02em}
+.page-sub{margin-bottom:28px;color:var(--muted);font-size:0.9rem}
+.sec{margin-bottom:40px;scroll-margin-top:20px}
+.sec h2{font-size:1.2rem;font-weight:600;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.ep{border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;margin-bottom:12px;background:var(--card);scroll-margin-top:16px}
+.ep-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px;margin-bottom:4px}
+.ep-name{font-family:var(--mono);font-size:0.92rem;color:var(--accent);font-weight:600}
+.ep-api{font-size:0.75rem;color:var(--muted);font-family:var(--mono);background:var(--bg0);padding:2px 8px;border-radius:4px;border:1px solid var(--border)}
+.ep-desc{margin:4px 0 10px;font-size:0.9rem;color:#c5d0dc}
+.ep-sec-title{font-size:0.78rem;color:var(--accent2);font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
+.table-wrap{overflow-x:auto;margin:4px 0 8px;max-width:100%}
+table{width:100%;border-collapse:collapse;font-size:0.78rem;min-width:480px}
+th,td{border:1px solid var(--border);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--bg1);color:var(--muted);font-weight:500;white-space:nowrap}
+td code{color:var(--accent);font-size:.9em;font-family:var(--mono)}
+pre{background:var(--bg0);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-family:var(--mono);font-size:0.78rem;overflow-x:auto;margin:6px 0 10px;color:#b8c8dc}
+code{font-family:var(--mono)}
+@media(max-width:800px){
+  .nav{width:240px;transform:translateX(-100%);transition:transform .25s}
+  .nav.open{transform:translateX(0)}
+  .nav-toggle{display:flex;position:fixed;top:12px;left:12px;z-index:200;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-size:0.85rem;cursor:pointer}
+  .main{margin-left:0;padding:56px 14px 80px;max-width:100vw}
+  .nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99}
+  .nav-overlay.show{display:block}
+}
+</style>
+</head>
+<body>
+<button class="nav-toggle" id="navToggle">☰ 导航</button>
+<div class="nav-overlay" id="navOverlay"></div>
+<nav class="nav" id="nav"><div class="nav-inner" id="navTree"></div></nav>
+<main class="main">
+<div class="main-inner">
+<h1 class="page-title">开发者文档</h1>
+<p class="page-sub">极算金融量化平台 · 统一网关 API 参考</p>
+
+<div class="ep" style="margin-bottom:24px">
+  <div class="ep-sec-title">📡 统一网关</div>
+  <pre>POST http://124.220.44.71/api/gateway</pre>
+  <p style="font-size:0.82rem;color:var(--muted);line-height:1.6">所有接口通过同一网关调用。请求通过 POST 表单或 JSON 提交，每次请求必须携带 <code style="color:var(--accent)">token</code> 和 <code style="color:var(--accent)">api</code> 两个公共参数。</p>
+</div>
+
+<div class="ep" style="margin-bottom:24px">
+  <div class="ep-sec-title">📖 快速开始</div>
+  <p style="font-size:0.82rem;color:#c5d0dc;line-height:1.6;margin-bottom:8px"><strong>1.</strong> 联系客服获取 Token<br/><strong>2.</strong> 选择 API 并确定业务参数<br/><strong>3.</strong> 调用网关: <code>POST http://124.220.44.71/api/gateway</code><br/><strong>4.</strong> 解析返回 JSON</p>
+  <pre>curl -X POST http://124.220.44.71/api/gateway -d "token=YOUR_TOKEN" -d "api=hs_list_main"</pre>
+</div>
+
+<div class="ep" style="margin-bottom:24px">
+  <div class="ep-sec-title">📦 通用响应格式</div>
+  <pre>{
+  "code": 20000,   // 20000=成功
+  "msg": "success",
+  "data": [...]    // 数据数组或对象
+}</pre>
+</div>
+
+<div id="content"></div>
+</div>
+</main>
+
+<script>
+const data = [
+{id:"list",name:"股票列表与检索",items:[
+{name:"A股全列表",api:"stock_list",d:"沪深京多市场合并列表，交易日盘后多时段刷新。",p:[],f:[["dm","string","证券代码"],["mc","string","证券简称"],["jys","string","交易所 sh/sz/bj"]]},
+{name:"沪深A股基础列表",api:"hs_list_main",d:"沪深两市基础证券列表（不含北证）。约16:20更新。",p:[],f:[["dm","string","代码如000001"],["mc","string","名称如平安银行"],["jys","string","sh/sz"]]},
+{name:"新股日历",api:"ipo_calendar",d:"新股申购与发行日历，按申购日期倒序。约17:00刷新。",p:[],f:[["zqdm","string","股票代码"],["Zqjc","string","简称"],["sgdm","string","申购代码"],["fxsl","number","发行总数(股)"],["fxjg","number","发行价(元)"],["zqgbrq","string","中签号公布日"]]},
+{name:"沪深主要指数列表",api:"index_list_main",d:"沪深市场主要指数代码与名称。每日凌晨刷新。",p:[],f:[["dm","string","指数代码"],["mc","string","指数名称"],["jys","string","sh/sz"]]},
+{name:"京市指数列表",api:"bj_list_indices",d:"京市指数列表。",p:[],f:[["dm","string","代码如899050.BJ"],["mc","string","名称"]]},
+{name:"港股列表",api:"hk_list_stocks",d:"港股基础列表。",p:[],f:[["dm","string","代码如00001.HK"],["mc","string","名称"]]},
+{name:"科创板股票列表",api:"kc_list_stocks",d:"科创板股票列表。",p:[],f:[["dm","string","代码如688001.SH"],["mc","string","名称"]]},
+{name:"沪深基金列表",api:"fund_list_all",d:"沪深基金全列表。",p:[],f:[["dm","string","基金代码"],["mc","string","名称"],["jys","string","sh/sz"]]},
+{name:"ETF基金列表",api:"fund_list_etf",d:"ETF基金列表。",p:[],f:[["dm","string","代码"],["mc","string","名称"]]},
+{name:"ST股票列表",api:"base_st",d:"ST股票列表。约15:30更新。",p:[],f:[["code","string","股票代码"],["name","string","名称"]]}
+]},
+{id:"sector",name:"板块概念",items:[
+{name:"概念代码",api:"base_gn",d:"A股概念代码列表。约15:30更新。",p:[],f:[["name","string","板块名称"],["plateCode","string","板块代码"]]},
+{name:"板块代码",api:"base_bk",d:"A股板块代码列表。约15:30更新。",p:[],f:[["name","string","板块名称"],["plateCode","string","板块代码"]]},
+{name:"指数/行业/概念树",api:"sector_tree",d:"树形结构，isleaf=1的叶子节点可查成分。每周六凌晨刷新。",p:[],f:[["name","string","节点名称"],["Code","string","节点代码"],["type1","number","一级分类"],["Level","number","层级"],["isleaf","number","是否叶子"]]},
+{name:"按板块/概念查成分",api:"sector_constituents",d:"按叶子节点查成分证券。",p:[{k:"sector_code",r:"是",t:"string",d:"叶子节点Code"}],f:[["dm","string","代码"],["mc","string","名称"],["jys","string","交易所"]]},
+{name:"个股所属板块",api:"stock_sectors",d:"给定股票代码，返回所属指数/行业/概念。",p:[{k:"ts_code",r:"是",t:"string",d:"6位股票代码"}],f:[["Code","string","板块代码"],["name","string","板块名称"]]},
+{name:"板块历史资金流",api:"base_bk_flow_history",d:"板块主力与分档净流入序列。",p:[{k:"bkCode",r:"是",t:"string",d:"板块代码如BK1036"}],f:[["time","string","日期"],["mainAmount","string","主力净流入"],["bigAmount","string","大单净流入"],["supperBigAmount","string","超大单净流入"],["mainAmountPercentage","string","主力净占比(%)"]]},
+{name:"板块成分股列表",api:"base_bk_list",d:"板块成分股行情+分档净流入（分页）。",p:[{k:"bkCode",r:"是",t:"string",d:"板块代码"},{k:"pageNo",r:"是",t:"int",d:"页码"},{k:"pageSize",r:"是",t:"int",d:"行数"}],f:[["f12","string","股票代码"],["f14","string","名称"],["f3","string","涨跌幅"],["f62","string","主力净流入"],["f184","string","主力净占比(%)"]]}
+]},
+{id:"pool",name:"股池与盘面",items:[
+{name:"跌停股池",api:"pool_limit_down",d:"指定交易日跌停股票池，封单资金升序。交易时段约10分钟滚动更新。",p:[{k:"trade_date",r:"是",t:"string",d:"yyyy-MM-dd"}],f:[["dm","string","代码"],["mc","string","名称"],["p","number","价格"],["zf","number","跌幅(%)"],["cje","number","成交额(元)"]]},
+{name:"强势股池",api:"pool_strong",d:"强势股池（连续上涨等）。交易时段约10分钟滚动更新。",p:[{k:"trade_date",r:"是",t:"string",d:"yyyy-MM-dd"}],f:[["dm","string","代码"],["mc","string","名称"],["p","number","最新价"],["zf","number","涨幅(%)"]]},
+{name:"次新股池",api:"pool_secondary",d:"次新股池。",p:[{k:"trade_date",r:"是",t:"string",d:"yyyy-MM-dd"}],f:[["dm","string","代码"],["mc","string","名称"],["days","number","上市天数"]]},
+{name:"炸板股池",api:"pool_crack",d:"炸板股池（曾涨停后打开）。交易时段约10分钟滚动更新。",p:[{k:"trade_date",r:"是",t:"string",d:"yyyy-MM-dd"}],f:[["dm","string","代码"],["mc","string","名称"],["crack_times","number","炸板次数"]]},
+{name:"涨停股池",api:"pool_limit_up",d:"涨停股池，按封单资金降序。交易时段约10分钟滚动更新。",p:[{k:"trade_date",r:"是",t:"string",d:"yyyy-MM-dd"}],f:[["dm","string","代码"],["mc","string","名称"],["p","number","涨停价"],["fd_amount","number","封单资金(元)"]]}
+]},
+{id:"company",name:"公司资料",items:[
+{name:"公司简介",api:"company_profile",d:"获取公司基本信息简介。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["ts_code","string","代码"],["name","string","全称"],["industry","string","行业"],["area","string","地域"]]},
+{name:"所属指数成分",api:"company_esg",d:"所属指数成分信息。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["index_code","string","指数代码"],["index_name","string","名称"],["weight","number","权重(%)"]]},
+{name:"历届高管",api:"company_manager",d:"历届高管信息。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["name","string","姓名"],["title","string","职务"],["start_date","string","起始日"],["end_date","string","结束日"]]},
+{name:"历届董事会",api:"company_board",d:"历届董事会成员。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["name","string","姓名"],["title","string","职务"],["start_date","string","起始日期"]]},
+{name:"历届监事会",api:"company_sup",d:"历届监事会成员。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["name","string","姓名"],["title","string","职务"],["start_date","string","起始日期"]]},
+{name:"近年分红",api:"company_dividend",d:"分红送转数据。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["end_date","string","截止日"],["cash_dividend","number","每股红利(元)"],["share_dividend","number","每股送股"]]},
+{name:"近年增发",api:"company_rights",d:"增发配股数据。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["ann_date","string","公告日"],["issue_price","number","发行价"],["issue_amount","number","发行数量"]]},
+{name:"解禁限售",api:"company_unlock",d:"解禁限售，按解禁日倒序。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["rdate","string","解禁日"],["ramount","number","解禁(万股)"],["rprice","number","流通市值(亿元)"]]},
+{name:"近一年季度利润",api:"company_quarter_profit",d:"各季度利润表摘要，按报告期倒序。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["date","string","截止日"],["income","string","营收(万元)"],["profit","string","营业利润(万元)"],["reprofit","string","净利润(万元)"],["baseeps","string","基本每股收益"]]},
+{name:"近一年季度现金流",api:"company_quarter_cashflow",d:"各季度现金流量摘要。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["date","string","截止日"],["jyfinal","string","经营现金流(万元)"],["tzfinal","string","投资现金流(万元)"],["czfinal","string","筹资现金流(万元)"]]},
+{name:"近年业绩预告",api:"company_forecast",d:"业绩预告，按公告日倒序。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["pdate","string","公告日"],["rdate","string","报告期"],["type","string","类型"],["abs","string","摘要"]]},
+{name:"财务指标",api:"company_finance_metrics",d:"近四季主要财务指标。每日凌晨刷新。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["date","string","报告日"],["tbmg","number","摊薄每股收益"],["jzsy","number","净资产收益率(%)"],["zcfzl","number","资产负债率(%)"]]},
+{name:"十大股东",api:"company_holders_top10",d:"十大股东快照。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["jzrq","string","截止日"],["gdzs","number","股东总数"],["sdgd","array","十大股东数组"]]},
+{name:"十大流通股东",api:"company_float_holders_top10",d:"十大流通股东。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["jzrq","string","截止日"],["ggrq","string","公告日"],["sdgd","array","十大流通股东数组"]]},
+{name:"股东户数变化",api:"company_holder_trend",d:"股东户数及环比变化。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["jzrq","string","截止日"],["Gdhs","string","股东户数"],["bh","string","较上期变化"]]},
+{name:"基金持股",api:"company_fund_holders",d:"基金持股数据。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["rdate","string","报告期"],["fund_name","string","基金名称"],["hold_amount","number","持股数量"]]}
+]},
+{id:"rt",name:"实时与资金",items:[
+{name:"实时行情",api:"realtime_quotes",d:"实时行情快照。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["price","number","最新价"],["change_pct","number","涨跌幅(%)"],["volume","number","成交量"],["amount","number","成交额(元)"]]},
+{name:"当日逐笔成交",api:"tick_trade",d:"当日逐笔成交明细。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["time","string","成交时间"],["price","number","成交价"],["volume","number","成交量"],["side","string","方向B/S"]]},
+{name:"买卖五档",api:"realtime_bs",d:"实时买卖五档。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["bp1","number","买一价"],["bv1","number","买一量"],["sp1","number","卖一价"],["sv1","number","卖一量"]]}
+]},
+{id:"mf",name:"资金流向",items:[
+{name:"资金流向历史",api:"money_flow",d:"个股/板块资金流向历史。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"},{k:"trade_date",r:"否",t:"string",d:"yyyy-MM-dd"}],f:[["date","string","日期"],["main_net","number","主力净流入"],["big_net","number","大单净流入"],["super_big_net","number","超大单净流入"]]},
+{name:"个股资金流向",api:"stock_money_flow",d:"个股主力/散户分档资金流向。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["date","string","日期"],["main_inflow","number","主力净流入"],["main_pct","number","主力净占比(%)"]]}
+]},
+{id:"kl",name:"K线与扩展行情",items:[
+{name:"最新K线/分时",api:"kline_latest",d:"最新K线或当日分时。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["date","string","日期"],["open","number","开盘"],["high","number","最高"],["low","number","最低"],["close","number","收盘"],["volume","number","成交量"]]},
+{name:"历史K线/分时",api:"kline_history",d:"历史K线行情。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"},{k:"start_date",r:"否",t:"string",d:"起始日期"},{k:"end_date",r:"否",t:"string",d:"结束日期"}],f:[["date","string","日期"],["open","number","开盘"],["high","number","最高"],["low","number","最低"],["close","number","收盘"],["amount","number","成交额"]]},
+{name:"历史涨跌停价",api:"history_zt_limit",d:"历史涨跌停价行情指标。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["date","string","日期"],["zt_price","number","涨停价"],["dt_price","number","跌停价"],["close","number","收盘价"]]},
+{name:"股票基础信息",api:"stock_info",d:"行业/市值/股本等基础信息。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["industry","string","行业"],["market_cap","number","总市值"],["total_share","number","总股本"]]}
+]},
+{id:"fin",name:"财务报表",items:[
+{name:"资产负债表",api:"fin_balance",d:"上市公司资产负债表。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["end_date","string","截止日"],["total_assets","string","总资产"],["total_liab","string","总负债"],["equity","string","股东权益"]]},
+{name:"利润表",api:"fin_income",d:"上市公司利润表。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["end_date","string","截止日"],["revenue","string","营业收入"],["operating_profit","string","营业利润"],["net_profit","string","净利润"]]},
+{name:"现金流量表",api:"fin_cashflow",d:"上市公司现金流量表。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["end_date","string","截止日"],["operate_cf","string","经营现金流"],["invest_cf","string","投资现金流"],["finance_cf","string","筹资现金流"]]},
+{name:"财务主要指标",api:"fin_metrics",d:"主要财务指标(盈利能力/偿债/成长)。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["end_date","string","截止日"],["roe","number","ROE(%)"],["eps","number","每股收益"],["bps","number","每股净资产"]]},
+{name:"公司股本表",api:"fin_capital",d:"股本结构。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["total_shares","number","总股本"],["float_shares","number","流通股本"],["restricted_shares","number","限售股本"]]},
+{name:"十大股东",api:"fin_top10_holders",d:"十大股东列表及持股变动。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["holder_name","string","股东名称"],["hold_amount","number","持股数量"],["hold_pct","number","持股比例(%)"]]},
+{name:"十大流通股东",api:"fin_float_holders",d:"十大流通股东列表。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["holder_name","string","股东名称"],["hold_amount","number","持股数量"],["hold_pct","number","持股比例(%)"]]},
+{name:"股东数",api:"fin_holder_count",d:"股东户数变化统计。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["holders","number","股东总户数"],["change_pct","number","环比变化率(%)"]]}
+]},
+{id:"tech",name:"技术指标",items:[
+{name:"MACD",api:"tech_macd",d:"MACD指标。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["date","string","日期"],["dif","number","DIF"],["dea","number","DEA"],["macd","number","MACD柱"]]},
+{name:"均线MA",api:"tech_ma",d:"MA5/MA10/MA20/MA60。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["date","string","日期"],["ma5","number","5日均线"],["ma10","number","10日均线"],["ma20","number","20日均线"],["ma60","number","60日均线"]]},
+{name:"BOLL",api:"tech_boll",d:"布林带指标。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["date","string","日期"],["upper","number","上轨"],["mid","number","中轨"],["lower","number","下轨"]]},
+{name:"KDJ",api:"tech_kdj",d:"KDJ随机指标。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["date","string","日期"],["k","number","K值"],["d","number","D值"],["j","number","J值"]]},
+{name:"均线(扩展)",api:"tech_ma_ext",d:"更多周期均线。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["ma5","number","5日均线"],["ma10","number","10日均线"],["ma20","number","20日均线"],["ma60","number","60日均线"],["ma120","number","120日均线"]]}
+]},
+{id:"idx",name:"指数",items:[
+{name:"指数实时",api:"index_realtime",d:"指数实时行情。",p:[{k:"index_code",r:"是",t:"string",d:"指数代码如000001.SH"}],f:[["price","number","最新点位"],["change_pct","number","涨跌幅(%)"]]},
+{name:"指数最新K线",api:"index_kline_latest",d:"指数最新K线。",p:[{k:"index_code",r:"是",t:"string",d:"指数代码"}],f:[["date","string","日期"],["open","number","开盘"],["high","number","最高"],["low","number","最低"],["close","number","收盘"]]},
+{name:"指数历史K线",api:"index_kline_history",d:"指数历史K线。",p:[{k:"index_code",r:"是",t:"string",d:"指数代码"},{k:"start_date",r:"否",t:"string",d:"起始日期"},{k:"end_date",r:"否",t:"string",d:"结束日期"}],f:[["date","string","日期"],["open","number","开盘"],["high","number","最高"],["low","number","最低"],["close","number","收盘"]]},
+{name:"指数MACD",api:"index_macd",d:"指数MACD。",p:[{k:"index_code",r:"是",t:"string",d:"指数代码"}],f:[["dif","number","DIF"],["dea","number","DEA"],["macd","number","MACD柱"]]},
+{name:"指数MA",api:"index_ma",d:"指数均线。",p:[{k:"index_code",r:"是",t:"string",d:"指数代码"}],f:[["ma5","number","5日均线"],["ma10","number","10日均线"],["ma20","number","20日均线"],["ma60","number","60日均线"]]},
+{name:"指数BOLL",api:"index_boll",d:"指数布林带。",p:[{k:"index_code",r:"是",t:"string",d:"指数代码"}],f:[["upper","number","上轨"],["mid","number","中轨"],["lower","number","下轨"]]},
+{name:"指数KDJ",api:"index_kdj",d:"指数KDJ。",p:[{k:"index_code",r:"是",t:"string",d:"指数代码"}],f:[["k","number","K值"],["d","number","D值"],["j","number","J值"]]}
+]},
+{id:"om",name:"京/港/科创/基金",items:[
+{name:"京市股票实时",api:"bj_realtime",d:"京市实时行情。",p:[{k:"ts_code",r:"是",t:"string",d:"股票代码"}],f:[["price","number","最新价"],["change_pct","number","涨跌幅(%)"]]},
+{name:"京市五档",api:"bj_bs",d:"京市买卖五档。",p:[{k:"ts_code",r:"是",t:"string",d:"股票代码"}],f:[["bp1","number","买一价"],["bv1","number","买一量"],["sp1","number","卖一价"],["sv1","number","卖一量"]]},
+{name:"港股实时",api:"hk_realtime",d:"港股实时行情。",p:[{k:"ts_code",r:"是",t:"string",d:"港股代码"}],f:[["price","number","最新价"],["change_pct","number","涨跌幅(%)"]]},
+{name:"港股五档",api:"hk_bs",d:"港股买卖五档。",p:[{k:"ts_code",r:"是",t:"string",d:"港股代码"}],f:[["bp1","number","买一价"],["bv1","number","买一量"],["sp1","number","卖一价"],["sv1","number","卖一量"]]},
+{name:"科创板实时",api:"kc_realtime",d:"科创板实时行情。",p:[{k:"ts_code",r:"是",t:"string",d:"股票代码"}],f:[["price","number","最新价"],["change_pct","number","涨跌幅(%)"]]},
+{name:"科创板五档",api:"kc_bs",d:"科创板买卖五档。",p:[{k:"ts_code",r:"是",t:"string",d:"股票代码"}],f:[["bp1","number","买一价"],["bv1","number","买一量"],["sp1","number","卖一价"],["sv1","number","卖一量"]]},
+{name:"基金实时",api:"fund_realtime",d:"基金实时净值。",p:[{k:"ts_code",r:"是",t:"string",d:"基金代码"}],f:[["price{name:"基金实时",api:"fund_realtime",d:"基金实时净值。",p:[{k:"ts_code",r:"是",t:"string",d:"基金代码"}],f:[["price","number","最新净值"],["change_pct","number","涨跌幅(%)"]]}
+]},
+{id:"auc",name:"集合竞价",items:[
+{name:"早盘热点板块竞价",api:"auction_hot_sectors",d:"早盘集-合-竞价热点板块排名。",p:[{k:"trade_date",r:"是",t:"string",d:"yyyy-MM-dd"}],f:[["sector_name","string","板块名称"],["score","number","强度评分"],["stock_count","number","涨停个股数"]]},
+{name:"竞价增强版热点板块",api:"auction_hot_enhanced",d:"增强版热点板块竞价分析。",p:[{k:"trade_date",r:"是",t:"string",d:"yyyy-MM-dd"}],f:[["sector_name","string","板块名称"],["enhanced_score","number","增强评分"]]},
+{name:"热点板块竞价所属个股",api:"auction_hot_stocks",d:"竞价热点板块所属个股明细。",p:[{k:"trade_date",r:"是",t:"string",d:"yyyy-MM-dd"}],f:[["code","string","代码"],["name","string","名称"],["sector","string","所属板块"]]},
+{name:"竞价增强版个股",api:"auction_hot_stocks_enhanced",d:"增强版热点个股明细。",p:[{k:"trade_date",r:"是",t:"string",d:"yyyy-MM-dd"}],f:[["code","string","代码"],["name","string","名称"],["bid_pct","number","涨幅(%)"]]},
+{name:"早盘抢筹委托金额排序",api:"auction_order_amount",d:"早盘抢筹委托金额排序。",p:[{k:"trade_date",r:"是",t:"string",d:"yyyy-MM-dd"}],f:[["code","string","代码"],["name","string","名称"],["order_amount","number","委托金额(元)"]]},
+{name:"早盘抢筹成交金额排序",api:"auction_trade_amount",d:"早盘成交金额排序。",p:[{k:"trade_date",r:"是",t:"string",d:"yyyy-MM-dd"}],f:[["code","string","代码"],["name","string","名称"],["trade_amount","number","成交金额(元)"]]},
+{name:"早盘抢筹开盘金额排序",api:"auction_open_amount",d:"早盘开盘金额排序。",p:[{k:"trade_date",r:"是",t:"string",d:"yyyy-MM-dd"}],f:[["code","string","代码"],["name","string","名称"],["open_amount","number","开盘金额(元)"]]},
+{name:"早盘抢筹涨幅排序",api:"auction_gain_sort",d:"早盘涨幅排序。",p:[{k:"trade_date",r:"是",t:"string",d:"yyyy-MM-dd"}],f:[["code","string","代码"],["name","string","名称"],["gain_pct","number","涨幅(%)"]]},
+{name:"尾盘抢筹委托金额排序",api:"close_order_amount",d:"尾盘委托金额排序。",p:[{k:"trade_date",r:"是",t:"string",d:"yyyy-MM-dd"}],f:[["code","string","代码"],["name","string","名称"],["order_amount","number","委托金额(元)"]]},
+{name:"尾盘抢筹成交金额排序",api:"close_trade_amount",d:"尾盘成交金额排序。",p:[{k:"trade_date",r:"是",t:"string",d:"yyyy-MM-dd"}],f:[["code","string","代码"],["name","string","名称"],["trade_amount","number","成交金额(元)"]]},
+{name:"尾盘抢筹收盘金额排序",api:"close_close_amount",d:"尾盘收盘金额排序。",p:[{k:"trade_date",r:"是",t:"string",d:"yyyy-MM-dd"}],f:[["code","string","代码"],["name","string","名称"],["close_amount","number","收盘金额(元)"]]},
+{name:"尾盘抢筹涨幅排序",api:"close_gain_sort",d:"尾盘涨幅排序。",p:[{k:"trade_date",r:"是",t:"string",d:"yyyy-MM-dd"}],f:[["code","string","代码"],["name","string","名称"],["gain_pct","number","涨幅(%)"]]},
+{name:"竞价一字板",api:"auction_oneword",d:"竞价一字板识别。",p:[{k:"trade_date",r:"是",t:"string",d:"yyyy-MM-dd"}],f:[["code","string","代码"],["name","string","名称"],["bid_price","number","竞价价"],["oneword_pct","number","涨幅(%)"]]}
+]},
+{id:"abn",name:"异动数据",items:[
+{name:"全量异动数据",api:"abnormal_all",d:"全量市场异动数据。",p:[{k:"trade_date",r:"是",t:"string",d:"yyyy-MM-dd"}],f:[["code","string","代码"],["name","string","名称"],["type","string","异动类型"],["value","number","异动值"]]},
+{name:"历史股票异动",api:"abnormal_history",d:"个股历史异动数据。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["date","string","日期"],["type","string","异动类型"],["value","number","异动值"]]}
+]},
+{id:"risk",name:"风险预警",items:[
+{name:"大股东减持",api:"risk_holder_reduce",d:"大股东减持数据。",p:[{k:"trade_date",r:"是",t:"string",d:"yyyy-MM-dd"}],f:[["code","string","代码"],["name","string","名称"],["reduce_pct","number","减持比例(%)"],["reduce_amount","number","减持金额"]]},
+{name:"大比例解禁",api:"risk_unlock",d:"大比例解禁数据。",p:[{k:"trade_date",r:"是",t:"string",d:"yyyy-MM-dd"}],f:[["code","string","代码"],["name","string","名称"],["unlock_pct","number","解禁比例(%)"],["unlock_date","string","解禁日期"]]},
+{name:"风险监控",api:"risk_monitor",d:"个股风险监控。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["risk_type","string","风险类型"],["risk_level","string","风险等级"],["description","string","说明"]]},
+{name:"严重异动提醒",api:"risk_abnormal",d:"严重异动提醒。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["alert_type","string","提醒类型"],["alert_level","string","提醒级别"],["content","string","提醒内容"]]}
+]},
+{id:"pop",name:"人气榜",items:[
+{name:"股票人气排行榜",api:"popularity_rank",d:"股票人气排行榜。",p:[{k:"trade_date",r:"是",t:"string",d:"yyyy-MM-dd"}],f:[["rank","number","排名"],["code","string","代码"],["name","string","名称"],["popularity","number","人气值"]]}
+]},
+{id:"mood",name:"情绪周期",items:[
+{name:"情绪周期数据",api:"mood_cycle",d:"市场情绪周期数据。",p:[{k:"trade_date",r:"是",t:"string",d:"yyyy-MM-dd"}],f:[["date","string","日期"],["cycle_phase","string","周期阶段"],["score","number","情绪评分"],["description","string","阶段描述"]]}
+]},
+{id:"lhb",name:"龙虎榜",items:[
+{name:"龙虎榜查询",api:"lhb_query",d:"龙虎榜数据按日期查询。",p:[{k:"trade_date",r:"是",t:"string",d:"yyyy-MM-dd"}],f:[["code","string","代码"],["name","string","名称"],["buy_amount","number","买入额(元)"],["sell_amount","number","卖出额(元)"],["net_amount","number","净额(元)"]]},
+{name:"单个游资交割单",api:"lhb_individual",d:"单个游资席位上榜交割单。",p:[{k:"trader_name",r:"是",t:"string",d:"游资名称"}],f:[["code","string","代码"],["name","string","名称"],["buy_amount","number","买入额"],["sell_amount","number","卖出额"],["trade_date","string","交易日期"]]},
+{name:"个股游资交割单",api:"lhb_stock_history",d:"历史个股游资上榜交割单。",p:[{k:"ts_code",r:"是",t:"string",d:"6位代码"}],f:[["trader_name","string","游资名称"],["buy_amount","number","买入额"],["sell_amount","number","卖出额"],["trade_date","string","日期"]]},
+{name:"全量游资交割单",api:"lhb_all",d:"全量游资上榜交割单。",p:[{k:"trade_date",r:"是",t:"string",d:"yyyy-MM-dd"}],f:[["trader_name","string","游资"],["code","string","代码"],["name","string","名称"],["buy_amount","number","买入额"],["sell_amount","number","卖出额"]]},
+{name:"游资名称列表",api:"lhb_trader_names",d:"获取所有游资席位的名称列表。",p:[],f:[["trader_name","string","游资名称"],["count","number","上榜次数"]]}
+]},
+{id:"stats",name:"情绪周期",items:[
+{name:"情绪周期数据",api:"mood_cycle",d:"市场情绪周期数据。",p:[{k:"trade_date",r:"是",t:"string",d:"yyyy-MM-dd"}],f:[["date","string","日期"],["cycle_phase","string","周期阶段"],["score","number","情绪评分"]]}
+]}
+];
+
+// Build nav
+const nav = document.getElementById("navTree");
+data.forEach(cat => {
+  const catEl = document.createElement("div");
+  catEl.className = "nav-cat";
+  catEl.textContent = cat.name;
+  catEl.dataset.cat = cat.id;
+  
+  const sub = document.createElement("div");
+  sub.className = "nav-sub";
+  sub.id = "ns-" + cat.id;
+  
+  cat.items.forEach(ep => {
+    const item = document.createElement("div");
+    item.className = "nav-item";
+    item.textContent = ep.name;
+    item.dataset.api = ep.api;
+    item.onclick = () => {
+      const el = document.getElementById("ep-" + ep.api);
+      if(el) { el.scrollIntoView({behavior:"smooth"}); }
+    };
+    sub.appendChild(item);
+  });
+  
+  catEl.onclick = () => {
+    sub.classList.toggle("open");
+  };
+  
+  nav.appendChild(catEl);
+  nav.appendChild(sub);
+});
+
+// Build content
+const content = document.getElementById("content");
+data.forEach(cat => {
+  const sec = document.createElement("div");
+  sec.className = "sec";
+  sec.id = "sec-" + cat.id;
+  
+  let html = "<h2>" + cat.name + " <span class='sec-tag'>(" + cat.items.length + "个接口)</span></h2>";
+  
+  cat.items.forEach(ep => {
+    html += "<div class='ep' id='ep-" + ep.api + "'>";
+    html += "<div class='ep-head'><span class='ep-name'>" + ep.name + "</span><span class='ep-api'>api=" + ep.api + "</span></div>";
+    html += "<div class='ep-desc'>" + ep.d + "</div>";
+    
+    // Params table
+    html += "<div class='ep-sec-title'>📋 请求参数</div><div class='table-wrap'><table><tr><th>参数名</th><th>必填</th><th>类型</th><th>说明</th></tr>";
+    html += "<tr><td>token</td><td>是</td><td>string</td><td>平台发放的访问Token</td></tr>";
+    html += "<tr><td>api</td><td>是</td><td>string</td><td>本接口API别名: " + ep.api + "</td></tr>";
+    if (ep.p.length === 0) {
+      html += "<tr><td colspan='4' style='text-align:center;color:var(--muted)'>无额外业务参数</td></tr>";
+    } else {
+      ep.p.forEach(p => {
+        html += "<tr><td>" + p.k + "</td><td>" + p.r + "</td><td>" + p.t + "</td><td>" + p.d + "</td></tr>";
+      });
+    }
+    html += "</table></div>";
+    
+    // Fields table
+    html += "<div class='ep-sec-title'>📊 返回字段</div><div class='table-wrap'><table><tr><th>字段</th><th>类型</th><th>说明</th></tr>";
+    if (ep.f && ep.f.length) {
+      ep.f.forEach(f => {
+        html += "<tr><td><code>" + f[0] + "</code></td><td>" + f[1] + "</td><td>" + f[2] + "</td></tr>";
+      });
+    }
+    html += "</table></div>";
+    
+    // Gateway notice
+    html += "<div class='ep-sec-title'>📡 调用方式</div>";
+    html += "<pre>POST http://124.220.44.71/api/gateway</pre>";
+    
+    html += "</div>";
+  });
+  
+  sec.innerHTML = html;
+  content.appendChild(sec);
+});
+
+// Mobile toggle
+document.getElementById("navToggle").onclick = () => {
+  document.getElementById("nav").classList.toggle("open");
+  document.getElementById("navOverlay").classList.toggle("show");
+};
+document.getElementById("navOverlay").onclick = () => {
+  document.getElementById("nav").classList.remove("open");
+  document.getElementById("navOverlay").classList.remove("show");
+};
+
+// Open first category by default
+document.querySelector(".nav-cat")?.click();
+</script>
+</body>
+</html>
