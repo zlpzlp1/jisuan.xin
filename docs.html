@@ -94,51 +94,6 @@ td.pr{color:#e74c3c;font-size:12px}
   </main>
 </div>
 <button class="sidebar-toggle" id="sidebarToggle" onclick="var sb=document.getElementById('sidebar');sb.classList.toggle('open');">&#x2630;</button>
-<script>
-function toggleCat(id) {
-  var ch = document.getElementById('ch-' + id);
-  if (!ch) return;
-  var arr = document.getElementById('arr-' + id);
-  if (ch.classList.contains('open')) {
-    ch.classList.remove('open');
-    if (arr) arr.classList.remove('open');
-  } else {
-    ch.classList.add('open');
-    if (arr) arr.classList.add('open');
-  }
-}
-
-function showApi(catId, idx) {
-  var secs = document.querySelectorAll('.api-section');
-  for (var i = 0; i < secs.length; i++) {
-    secs[i].classList.remove('active');
-  }
-  var sec = document.getElementById('sec-' + catId);
-  if (sec) sec.classList.add('active');
-  var ws = document.getElementById('welcomeSection');
-  if (ws) ws.style.display = 'none';
-  setTimeout(function() {
-    var card = document.getElementById('card-' + catId + '-' + idx);
-    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 50);
-  var links = document.querySelectorAll('.nav-link');
-  for (var i = 0; i < links.length; i++) links[i].classList.remove('active');
-  var link = document.getElementById('nav-' + catId + '-' + idx);
-  if (link) link.classList.add('active');
-}
-
-function searchApi(val) {
-  var q = val.toLowerCase().trim();
-  var links = document.querySelectorAll('.nav-link');
-  for (var i = 0; i < links.length; i++) {
-    links[i].style.display = (!q || links[i].textContent.toLowerCase().indexOf(q) > -1) ? '' : 'none';
-  }
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-  var c = document.querySelector('.nav-category');
-  if (c) c.click();
-});
-</script>
+<script src="js/docs.js"></script>
 </body>
 </html>
