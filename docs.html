@@ -95,102 +95,50 @@ td.pr{color:#e74c3c;font-size:12px}
 </div>
 <button class="sidebar-toggle" id="sidebarToggle" onclick="var sb=document.getElementById('sidebar');sb.classList.toggle('open');">&#x2630;</button>
 <script>
-function toggleCat(id){var ch=document.getElementById('ch-'+id);var arr=document.getElementById('arr-'+id);if(ch.classList.contains('open')){ch.classList.remove('open');arr.classList.remove('open');}else{ch.classList.add('open');arr.classList.add('open');}}
-function showApi(catId,idx){
-  var secs=document.querySelectorAll('.api-section');
-  for(var i=0;i<secs.length;i++){secs[i].classList.remove('active');}
-  var sec=document.getElementById('sec-'+catId);
-  if(sec){sec.classList.add('active');}
-  var ws=document.getElementById('welcomeSection');
-  if(ws){ws.style.display='none';}
-  setTimeout(function(){
-    var card=document.getElementById('card-'+catId+'-'+idx);
-    if(card){card.scrollIntoView({behavior:'smooth',block:'start'});}
-  },50);
-  var links=document.querySelectorAll('.nav-link');
-  for(var i=0;i<links.length;i++){links[i].classList.remove('active');}
-  var link=document.getElementById('nav-'+catId+'-'+idx);
-  if(link){link.classList.add('active');}
-}
-function searchApi(val){var q=val.toLowerCase().trim();document.querySelectorAll('.nav-link').forEach(function(l){if(!q){l.style.display='';return;}l.style.display=l.textContent.toLowerCase().indexOf(q)>-1?'':'none';});}
-document.addEventListener('DOMContentLoaded',function(){var c=document.querySelector('.nav-category');if(c)c.click();});
-
-
-// ===== 代码示例生成 =====
-function genCodeSnippet(apiName, params) {
-  // params: array of {k, r, t, d} or empty
-  const curlParams = ['token=YOUR_TOKEN', 'api=' + apiName]
-  const pyParams = ["'token': 'YOUR_TOKEN'", "'api': '" + apiName + "'"]
-  
-  params.forEach(function(p) {
-    const val = p.t === 'int' ? '1' : p.t === 'number' ? '0' : 'YOUR_VALUE'
-    curlParams.push(p.k + '=' + val)
-    pyParams.push("'" + p.k + "': '" + val + "'")
-  })
-  
-  const curlStr = "curl -X POST http://124.220.44.71/api/gateway \\
-  -d "" + curlParams.join('" \\
-  -d "') + '"'
-  
-  const pyStr = 'import requests
-
-url = "http://124.220.44.71/api/gateway"
-data = {
-  ' + pyParams.join(',
-  ') + '
+function toggleCat(id) {
+  var ch = document.getElementById('ch-' + id);
+  var arr = document.getElementById('arr-' + id);
+  if (!ch) return;
+  if (ch.classList.contains('open')) {
+    ch.classList.remove('open');
+    arr.classList.remove('open');
+  } else {
+    ch.classList.add('open');
+    arr.classList.add('open');
+  }
 }
 
-resp = requests.post(url, data=data)
-print(resp.json())'
-  
-  return { curl: curlStr, python: pyStr }
+function showApi(catId, idx) {
+  var secs = document.querySelectorAll('.api-section');
+  for (var i = 0; i < secs.length; i++) {
+    secs[i].classList.remove('active');
+  }
+  var sec = document.getElementById('sec-' + catId);
+  if (sec) sec.classList.add('active');
+  var ws = document.getElementById('welcomeSection');
+  if (ws) ws.style.display = 'none';
+  setTimeout(function() {
+    var card = document.getElementById('card-' + catId + '-' + idx);
+    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 50);
+  var links = document.querySelectorAll('.nav-link');
+  for (var i = 0; i < links.length; i++) links[i].classList.remove('active');
+  var link = document.getElementById('nav-' + catId + '-' + idx);
+  if (link) link.classList.add('active');
 }
 
-function addCodeSnippets() {
-  document.querySelectorAll('.api-section').forEach(function(section) {
-    const apiEl = section.querySelector('.api-badge')
-    if (!apiEl) return
-    const apiName = apiEl.textContent.trim()
-    const params = []
-    const paramRows = section.querySelectorAll('.param-table td:first-child')
-    paramRows.forEach(function(td) {
-      const name = td.textContent.trim()
-      if (name !== 'token' && name !== 'api') {
-        params.push({k: name})
-      }
-    })
-    
-    const codeContainer = section.querySelector('.code-snippets')
-    if (!codeContainer) return
-    
-    const snippet = genCodeSnippet(apiName, params)
-    
-    codeContainer.innerHTML = 
-      '<div class="code-tabs" style="display:flex;gap:8px;margin-bottom:8px">' +
-      '<button class="code-tab active" onclick="showCodeTab(this,\'curl\')">curl</button>' +
-      '<button class="code-tab" onclick="showCodeTab(this,\'python\')">Python</button>' +
-      '</div>' +
-      '<pre class="code-block code-curl">' + escapeHtml(snippet.curl) + '</pre>' +
-      '<pre class="code-block code-python" style="display:none">' + escapeHtml(snippet.python) + '</pre>'
-  })
+function searchApi(val) {
+  var q = val.toLowerCase().trim();
+  var links = document.querySelectorAll('.nav-link');
+  for (var i = 0; i < links.length; i++) {
+    links[i].style.display = (!q || links[i].textContent.toLowerCase().indexOf(q) > -1) ? '' : 'none';
+  }
 }
 
-function showCodeTab(btn, lang) {
-  const container = btn.closest('.code-snippets')
-  container.querySelectorAll('.code-tab').forEach(function(t) { t.classList.remove('active') })
-  btn.classList.add('active')
-  container.querySelectorAll('.code-block').forEach(function(b) { b.style.display = 'none' })
-  container.querySelector('.code-' + lang).style.display = ''
-}
-
-function escapeHtml(str) {
-  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-}
-
-// Run after DOM
 document.addEventListener('DOMContentLoaded', function() {
-  setTimeout(addCodeSnippets, 100)
-})
+  var c = document.querySelector('.nav-category');
+  if (c) c.click();
+});
 </script>
 </body>
 </html>
