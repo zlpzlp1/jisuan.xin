@@ -1,9 +1,12 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>极算金融数据平台 · 极速数据 · 极简接入</title>
+<title>极算金融量化平台 · 一个API接入所有数据</title>
+<meta name="description" content="极算金融量化平台 — 为量化团队提供统一金融数据网关，一个 API Token 接入实时行情、K线、板块、龙虎榜、竞价、资金流向等 100+ 数据接口。">
+<meta name="keywords" content="金融数据API,量化数据,金融量化平台,A股数据接口,实时行情API,量化交易数据,极算">
+<meta name="robots" content="index,follow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -38,6 +41,11 @@ body{
 .layout{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:32px 20px 80px}
 .main{min-width:0}
 
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg0)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
 /* ── hero ── */
 .hero{text-align:center;padding:80px 0 56px}
 .hero-badge{
@@ -52,6 +60,7 @@ body{
   letter-spacing:-.025em;line-height:1.15;margin-bottom:18px
 }
 .hero h1 span{background:linear-gradient(120deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .slogan{font-size:1.25rem;color:var(--accent2);font-weight:500;margin-bottom:6px}
 .hero p{font-size:1.1rem;color:var(--muted);max-width:620px;margin:0 auto 32px}
 .hero-actions{display:flex;flex-wrap:wrap;gap:14px;justify-content:center}
 .btn{
@@ -92,6 +101,19 @@ body{
 .cap-card h3{font-size:1.05rem;font-weight:600;margin-bottom:8px}
 .cap-card p{font-size:.85rem;color:var(--muted);line-height:1.55}
 
+/* ── scenario ── */
+.scenario-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:20px}
+.scenario-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:28px;transition:border-color .2s;position:relative
+}
+.scenario-card:hover{border-color:var(--accent)}
+.scenario-card .icon{font-size:2rem;margin-bottom:10px}
+.scenario-card h3{font-size:1.05rem;font-weight:600;margin-bottom:6px}
+.scenario-card p{font-size:.85rem;color:var(--muted);line-height:1.5;margin-bottom:10px}
+.scenario-tags{display:flex;flex-wrap:wrap;gap:6px}
+.scenario-tag{background:var(--accent-dim);color:var(--accent);font-size:.72rem;padding:2px 10px;border-radius:10px;border:1px solid rgba(46,204,113,.15)}
+
 /* ── timeline ── */
 .timeline{max-width:700px;margin:0 auto}
 .tl-item{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid var(--border)}
@@ -108,12 +130,38 @@ body{
 }
 .contact-box h3{font-size:1.15rem;font-weight:600;margin-bottom:6px}
 .contact-box p{font-size:.88rem;color:var(--muted);margin-bottom:20px}
-.qr-placeholder{
-  display:inline-flex;align-items:center;justify-content:center;
-  width:180px;height:180px;background:var(--bg1);border:2px dashed var(--border);
-  border-radius:12px;color:var(--muted);font-size:.8rem;margin-bottom:16px
-}
+.qr-image{display:inline-block;width:180px;height:180px;margin-bottom:16px}
+.qr-image img{width:180px;height:180px;border-radius:12px;display:block}
 .contact-box .note{font-size:.78rem;color:#5a6a7a;margin-top:4px}
+
+/* ── floating QR bar ── */
+.float-bar{
+  position:fixed;bottom:0;left:0;right:0;
+  background:rgba(12,17,24,.92);
+  backdrop-filter:blur(12px);
+  border-top:1px solid var(--border);
+  padding:10px 20px;
+  display:flex;align-items:center;justify-content:center;gap:16px;
+  z-index:200;font-size:.88rem;
+  transform:translateY(0);
+  transition:transform .3s;
+}
+.float-bar.hidden{transform:translateY(100%)}
+.float-bar .label{color:var(--text);font-weight:500}
+.float-bar .hint{color:var(--muted);font-size:.78rem}
+.float-bar .qr-thumb{
+  width:40px;height:40px;border-radius:6px;cursor:pointer;
+  border:1px solid var(--border);flex-shrink:0
+}
+.float-bar .btn-small{
+  background:var(--accent);color:#070a0d;border:none;
+  padding:8px 20px;border-radius:8px;font-weight:600;
+  font-size:.82rem;cursor:pointer;text-decoration:none
+}
+.float-bar .close-btn{
+  background:none;border:none;color:var(--muted);cursor:pointer;
+  font-size:1.2rem;padding:4px;margin-left:8px
+}
 
 /* ── footer ── */
 .footer{border-top:1px solid var(--border);padding:28px 0;margin-top:40px}
@@ -124,23 +172,9 @@ body{
 .footer-links a:hover{color:var(--accent)}
 .footer-copy{font-size:.76rem;color:#4a5a6a}
 
-/* ── api nav ── */
-.api-page h1{font-size:1.5rem;font-weight:700;margin-bottom:6px}
-.api-page .sub{color:var(--muted);font-size:.88rem;margin-bottom:24px}
-.api-grid{display:grid;grid-template-columns:280px 1fr;gap:24px}
-.api-nav{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 0;position:sticky;top:20px;align-self:start;max-height:calc(100vh-80px);overflow-y:auto}
-.api-nav-cat{font-size:.78rem;font-weight:700;color:var(--accent);text-transform:uppercase;padding:12px 16px 4px;letter-spacing:.5px}
-.api-nav a{display:block;padding:4px 16px 4px 20px;font-size:.82rem;color:var(--muted);text-decoration:none;transition:color .15s}
-.api-nav a:hover{color:var(--accent)}
-.api-nav a.active{color:var(--accent);border-left:2px solid var(--accent);padding-left:18px}
-.api-content{min-width:0}
-.api-endpoint{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}
-.api-endpoint h3{font-size:.95rem;font-weight:600;margin-bottom:4px;font-family:var(--mono)}
-.api-endpoint .desc{font-size:.83rem;color:var(--muted);margin-bottom:10px}
-.api-endpoint .tag{display:inline-block;background:var(--accent-dim);color:var(--accent);font-size:.72rem;padding:2px 8px;border-radius:4px;font-family:var(--mono)}
 @media(max-width:800px){
-  .api-grid{grid-template-columns:1fr}
-  .api-nav{position:static;max-height:none}
+  .float-bar .hint{display:none}
+  .float-bar .label{font-size:.82rem}
 }
 </style>
 </head>
@@ -154,11 +188,46 @@ body{
 <!-- ───────── HERO ───────── -->
 <section class="hero">
   <div class="hero-badge">✦ 量化开发者首选</div>
-  <h1><span>极算</span>金融数据平台</h1>
-  <p>为量化团队与开发者提供统一、高效、可审计的金融数据网关服务。一份 Token 接入多类行情、股池、财务与衍生数据，</p>
+  <div class="slogan">一个 API 接入所有数据</div>
+  <h1><span>极算</span>金融量化平台</h1>
+  <p>为量化团队与开发者提供统一的金融数据网关服务。一份 Token 接入实时行情、K 线、股池、板块、龙虎榜、竞价、资金流向等全品类数据。</p>
   <div class="hero-actions">
     <a href="#apis" class="btn btn-primary">查看所有接口</a>
     <a href="#contact" class="btn btn-outline">立即咨询接入</a>
+  </div>
+</section>
+
+<!-- ───────── 使用场景 ───────── -->
+<section class="section" id="scenarios">
+  <div class="section-header">
+    <h2>谁在用极算</h2>
+    <p>覆盖主流量化应用场景，一个 API 满足多种数据需求</p>
+  </div>
+  <div class="scenario-grid">
+    <div class="scenario-card">
+      <div class="icon">📈</div>
+      <h3>涨停板接力策略</h3>
+      <p>盘前扫描涨停候选池、竞价异动、板块热度，盘后统计封板质量与龙虎榜资金动向。一个 API 获取涨停池、竞价数据、板块成分股。</p>
+      <div class="scenario-tags"><span class="scenario-tag">涨停池</span><span class="scenario-tag">竞价数据</span><span class="scenario-tag">板块热度</span><span class="scenario-tag">龙虎榜</span></div>
+    </div>
+    <div class="scenario-card">
+      <div class="icon">🔬</div>
+      <h3>多因子选股研究</h3>
+      <p>基于行业、财务、量价因子构建评分模型，在统一数据源上回测与优化。一个 API 获取财务三表、技术指标、K 线、资金流向。</p>
+      <div class="scenario-tags"><span class="scenario-tag">财务报表</span><span class="scenario-tag">技术指标</span><span class="scenario-tag">K线数据</span><span class="scenario-tag">资金流向</span></div>
+    </div>
+    <div class="scenario-card">
+      <div class="icon">🛡️</div>
+      <h3>风控与合规监控</h3>
+      <p>盘中实时监控异动公告、大股东减持、限售解禁提醒、严重异常波动。一个 API 获取异动预警、解禁日历、龙虎榜席位。</p>
+      <div class="scenario-tags"><span class="scenario-tag">异动预警</span><span class="scenario-tag">限售解禁</span><span class="scenario-tag">龙虎榜</span><span class="scenario-tag">实时行情</span></div>
+    </div>
+    <div class="scenario-card">
+      <div class="icon">🧮</div>
+      <h3>量化回测系统</h3>
+      <p>构建历史回测管线，获取分钟级 K 线、复权价格、股票基础信息与板块归属。一个 API 覆盖回测所需的基础数据层。</p>
+      <div class="scenario-tags"><span class="scenario-tag">K线数据</span><span class="scenario-tag">板块成分</span><span class="scenario-tag">公司资料</span><span class="scenario-tag">行业分类</span></div>
+    </div>
   </div>
 </section>
 
@@ -211,17 +280,18 @@ body{
   </div>
 </section>
 
-</section>
-
 <!-- ───────── API 入口 ───────── -->
 <section class="section" style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:36px 28px;text-align:center;margin-bottom:64px">
   <h2 style="font-size:1.5rem;font-weight:700;margin-bottom:8px">API 接口文档</h2>
-  <p style="color:var(--muted);font-size:.9rem;max-width:500px;margin:0 auto 22px;line-height:1.55">
-    查看全部接口目录，接口文档每个端点，复制请求示例
+  <p style="color:var(--muted);font-size:.9rem;max-width:500px;margin:0 auto 12px;line-height:1.55">
+    查看全部接口目录，100+ 端点，每个接口附带请求参数表、返回字段说明与代码示例
+  </p>
+  <p style="color:var(--accent);font-size:.88rem;font-weight:500;margin-bottom:22px">
+    一个 API · 一份 Token · 全覆盖
   </p>
   <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center">
     <a href="docs.html" class="btn btn-primary" >→ 开发者文档</a>
-    <a href="jisuan_api_docs.html" class="btn btn-outline" >API接口目录</a>
+    <a href="jisuan_api_docs.html" class="btn btn-outline" >API 接口目录</a>
   </div>
   <p style="color:#5a6a7a;font-size:.78rem;margin-top:14px">统一网关：POST http://124.220.44.71/api/gateway · Token 鉴权 · 100+ 接口</p>
 </section>
@@ -230,7 +300,7 @@ body{
 <section class="section">
   <div class="section-header">
     <h2>三步接入</h2>
-    <p>从咨询到接入，高效对接</p>
+    <p>从咨询到上线，高效对接</p>
   </div>
   <div class="timeline">
     <div class="tl-item">
@@ -244,7 +314,7 @@ body{
       <div class="tl-marker">2</div>
       <div class="tl-content">
         <h4>阅读开发文档</h4>
-        <p>查阅接口目录与开发者文档，确认需要的接口别名、参数格式与返回字段。每个接口均附接口文档面板，不必写代码即可验证。</p>
+        <p>查阅接口目录与开发者文档，确认需要的接口别名、参数格式与返回字段。每个接口均附请求参数表与 curl/Python 代码示例。</p>
       </div>
     </div>
     <div class="tl-item">
@@ -263,8 +333,6 @@ body{
     <h2>接口目录</h2>
     <p>100+ 接口，涵盖 A 股全量数据需求</p>
   </div>
-
-  <!-- 这里只列一级分类，详细接口在开发者文档中 -->
   <div class="cards">
     <div class="card"><h3>📇 列表与检索</h3><p>A 股全列表、沪深基础列表、新股日历、指数列表、京/港/科创/基金列表</p></div>
     <div class="card"><h3>🔖 板块概念</h3><p>行业/概念/指数树、成分股查询、板块资金流向、个股所属板块</p></div>
@@ -293,8 +361,8 @@ body{
     <p>以极致计算效率，丈量每一刻市场脉搏</p>
   </div>
   <div class="contact-box" style="text-align:left;max-width:760px;line-height:1.7">
-    <p>极算金融数据平台面向金融科技企业、量化团队与个人开发者，提供统一、稳定、高可用的金融数据接口服务。平台围绕高吞吐、低延迟与标准化的工程理念构建，在鉴权、监控、日志与调用统计等方面建立了完备体系，帮助用户将精力聚焦在策略研发与业务落地，而非基础设施维护。</p>
-    <p>平台持续接入合规稳定的数据源与实时行情通道，通过统一接口规范、标准化字段与持续更新的文档体系，降低开发接入与维护成本；同时提供多 Token 管理、调用日志审计与 IP 绑定等安全机制，满足生产环境对稳定性和可追溯性的要求。</p>
+    <p>极算金融量化平台面向金融科技企业、量化团队与个人开发者，提供统一、稳定、高可用的金融数据接口服务。平台围绕高吞吐、低延迟与标准化的工程理念构建，在鉴权、监控、日志与调用统计等方面建立了完备体系，帮助用户将精力聚焦在策略研发与业务落地，而非基础设施维护。</p>
+    <p>平台通过统一接口规范、标准化字段与持续更新的文档体系，降低开发接入与维护成本；同时提供多 Token 管理、调用日志审计与 IP 绑定等安全机制，满足生产环境对稳定性和可追溯性的要求。</p>
     <p>极算团队具备多年金融 IT 与量化数据基础设施经验，坚持文档驱动与可观测性优先的开发理念——每一次接口更新均可在版本日志中追踪，便于合作方快速评估影响范围与升级节奏。</p>
   </div>
 </section>
@@ -308,9 +376,54 @@ body{
   <div class="contact-box">
     <h3>添加企业微信</h3>
     <p>扫码添加运营企微，发送「接入咨询」即可对接<br>08:00–23:00 在线响应</p>
-    <div class="qr-placeholder" id="qrCode">
-      <img src="qrcode.png" style="width:180px;height:180px;border-radius:8px;display:block" alt="企业微信二维码">';
-}
+    <div class="qr-image">
+      <img src="qrcode.png" alt="企业微信二维码">
+    </div>
+    <p class="note">扫码咨询 · 获取专属 Token</p>
+  </div>
+</section>
+
+<!-- ───────── Footer ───────── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">极算金融量化平台</div>
+    <div class="footer-links">
+      <a href="docs.html">开发者文档</a>
+      <a href="jisuan_api_docs.html">接口目录</a>
+      <a href="#about">关于</a>
+      <a href="#contact">联系我们</a>
+    </div>
+    <div class="footer-copy">&copy; <script>document.write(new Date().getFullYear())</script> 极算金融量化平台</div>
+  </div>
+</footer>
+
+</div><!-- /main -->
+</div><!-- /layout -->
+
+<!-- ───────── Floating QR Bar ───────── -->
+<div class="float-bar" id="floatBar">
+  <span class="label">📡 一个 API 接入所有数据</span>
+  <span class="hint">扫码获取专属 Token，即刻开始调测</span>
+  <img src="qrcode.png" class="qr-thumb" id="qrThumb" alt="二维码">
+  <a href="#contact" class="btn-small" onclick="document.getElementById('floatBar').classList.add('hidden')">立即咨询 →</a>
+  <button class="close-btn" onclick="document.getElementById('floatBar').classList.add('hidden')" title="关闭">✕</button>
+</div>
+
+<!-- ───────── Float bar auto-hide on scroll ───────── -->
+<script>
+(function() {
+  var bar = document.getElementById('floatBar');
+  var lastY = 0;
+  window.addEventListener('scroll', function() {
+    var nowY = window.scrollY;
+    if (nowY > 100 && nowY > lastY) {
+      bar.classList.add('hidden');
+    } else if (nowY <= lastY - 20) {
+      bar.classList.remove('hidden');
+    }
+    lastY = nowY;
+  }, {passive: true});
+})();
 </script>
 
 </body>
