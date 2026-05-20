@@ -97,14 +97,14 @@ td.pr{color:#e74c3c;font-size:12px}
 <script>
 function toggleCat(id) {
   var ch = document.getElementById('ch-' + id);
-  var arr = document.getElementById('arr-' + id);
   if (!ch) return;
+  var arr = document.getElementById('arr-' + id);
   if (ch.classList.contains('open')) {
     ch.classList.remove('open');
-    arr.classList.remove('open');
+    if (arr) arr.classList.remove('open');
   } else {
     ch.classList.add('open');
-    arr.classList.add('open');
+    if (arr) arr.classList.add('open');
   }
 }
 
